@@ -266,9 +266,15 @@ canvas {
         padding: 10px;
     }
 
+    .form-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
     .form-column {
-        width: 100%;
-        margin-bottom: 15px;
+        width: 48%; /* Dois inputs por linha */
+        margin-bottom: 10px;
     }
 
     /* Ajustar o grupo de botões */
@@ -290,5 +296,10 @@ canvas {
 
     canvas {
         height: auto !important;
+    }
+
+    /* Ajustar largura do botão Confirmar Informações no mobile */
+    .confirm-btn {
+        width: 100%; /* Botão ocupa toda a largura em telas pequenas */
     }
 }
