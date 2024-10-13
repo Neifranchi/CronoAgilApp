@@ -180,6 +180,33 @@ p {
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
+/* Estilo para a linha dos gráficos */
+.chart-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+    gap: 15px;
+}
+
+/* Estilo para as colunas dos gráficos */
+.chart-column {
+    flex: 1;
+    padding: 10px;
+}
+
+/* Estilo para conter os gráficos menores */
+.chart-container {
+    width: 100%;
+    max-width: 300px; /* Limitar tamanho máximo dos gráficos */
+    margin: 0 auto;
+}
+
+/* Ajuste para os gráficos ficarem menores */
+canvas {
+    width: 100% !important;
+    height: 200px !important; /* Reduzir a altura dos gráficos */
+}
+
 
 .timer-name {
     width: 30%;
@@ -218,33 +245,6 @@ p {
     font-size: 8px;
     cursor: pointer;
 }
-/* Estilo para a linha dos gráficos */
-.chart-row {
-    display: flex;
-    justify-content: space-between;
-    margin: 20px 0;
-    gap: 15px;
-}
-
-/* Estilo para as colunas dos gráficos */
-.chart-column {
-    flex: 1;
-    padding: 10px;
-}
-
-/* Estilo para conter os gráficos menores */
-.chart-container {
-    width: 100%;
-    max-width: 300px; /* Limitar tamanho máximo dos gráficos */
-    margin: 0 auto;
-}
-
-/* Ajuste para os gráficos ficarem menores */
-canvas {
-    width: 100% !important;
-    height: 200px !important; /* Reduzir a altura dos gráficos */
-}
-
 
 /* Responsividade */
 @media (max-width: 768px) {
