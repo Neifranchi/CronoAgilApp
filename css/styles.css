@@ -248,11 +248,47 @@ canvas {
 
 /* Responsividade */
 @media (max-width: 768px) {
+    /* Ajustar o layout dos cronômetros */
     .timers-container {
         flex-direction: column;
+        gap: 10px;
+    }
+
+    .column {
+        width: 100%;
+        margin: 0;
+        padding: 10px;
+        background-color: #f5f5f5;
+    }
+
+    /* Ajustar os campos do formulário */
+    .form-container {
+        padding: 10px;
     }
 
     .form-column {
         width: 100%;
+        margin-bottom: 15px;
+    }
+
+    /* Ajustar o grupo de botões */
+    .button-group {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    /* Botões menores para mobile */
+    .action-btn {
+        width: 100%;
+        padding: 10px;
+    }
+
+    /* Ajustar os gráficos para mobile */
+    .chart-container {
+        max-width: 100%;
+    }
+
+    canvas {
+        height: auto !important;
     }
 }
