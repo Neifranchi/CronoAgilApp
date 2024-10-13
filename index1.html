@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CronoMaster Web</title>
+    <link rel="stylesheet" href="/css/styles1.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script> <!-- Biblioteca para exportar para Excel -->
+</head>
+<body>
+
+    <!-- Mensagem de Boas-Vindas -->
+    <div id="welcome-popup" class="popup">
+        <div class="popup-content">
+            <h2>Bem-vindo ao CronoMaster Web</h2>
+            <p>Preencha os dados da cronoanálise para iniciar.</p>
+            <button id="closePopupBtn">Fechar</button>
+        </div>
+    </div>
+
+    <!-- Formulário de Cronoanálise -->
+    <div class="form-container">
+        <form id="cronoForm">
+            <div class="form-row">
+                <div class="form-column">
+                    <label for="op">Número da OP:</label>
+                    <input type="text" id="op" name="op" required>
+                </div>
+                <div class="form-column">
+                    <label for="pn">PN da Peça:</label>
+                    <input type="text" id="pn" name="pn" required>
+                </div>
+                <div class="form-column">
+                    <label for="hh">Hora do Roteiro Atual:</label>
+                    <input type="text" id="hh" name="hh" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-column">
+                    <label for="numOperacao">Número da Operação:</label>
+                    <input type="text" id="numOperacao" name="numOperacao" required>
+                </div>
+                <div class="form-column">
+                    <label for="chapa">Chapa do Operador:</label>
+                    <input type="text" id="chapa" name="chapa" required>
+                </div>
+                <div class="form-column">
+                    <label for="dimensional">Dimensional da Peça:</label>
+                    <input type="text" id="dimensional" name="dimensional" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <button type="submit" class="confirm-btn">Confirmar Informações</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Cabeçalho com Dados da Cronoanálise -->
+    <div class="header-info">
+        <div class="header-row">
+            <div class="header-column-left">
+                <p id="header-date">Data: --/--/---- Hora início: --:--:--</p>
+            </div>
+            <div class="header-column-center">
+                <h1>CronoMaster Web</h1>
+                <p>Gerenciador de CronoAnálise</p>
+            </div>
+            <div class="header-column-right">
+                <p id="total-time">Tempo Total Cronoanálise: 00:00:00</p>
+            </div>
+        </div>
+        <div class="header-row-second">
+            <p id="user-info">
+                Número da OP: ---- | PN da Peça: ---- | Hora do Roteiro Atual: ---- | Número da Operação: ---- | Chapa do Operador: ---- | Dimensional da Peça: ----
+            </p>
+        </div>
+    </div>
+
+    <!-- Grupo de Botões para Ações -->
+    <div class="button-group">
+        <input type="text" id="timerName" placeholder="Nome do cronômetro">
+        <select id="timerCategory">
+            <option value="D">Categoria D</option>
+            <option value="N">Categoria N</option>
+            <option value="A">Categoria A</option>
+            <option value="NA">Categoria N/A</option>
+        </select>
+        <button id="addTimerBtn" class="action-btn">Adicionar Cronômetro</button>
+        <button id="startAll" class="action-btn">Iniciar Tudo</button>
+        <button id="stopAll" class="action-btn">Parar Cronômetros</button>
+        <button id="resetAll" class="action-btn">Resetar Cronômetros</button>
+        <button id="exportExcel" class="action-btn">Exportar para Excel</button>
+    </div>
+
+    <!-- Área dos cronômetros -->
+    <div class="timers-container">
+        <div class="column" id="timersD">
+            <h3>Categoria D</h3>
+            <p class="category-total" id="totalD">Total: 00:00:00</p>
+        </div>
+
+        <div class="column" id="timersN">
+            <h3>Categoria N</h3>
+            <p class="category-total" id="totalN">Total: 00:00:00</p>
+        </div>
+
+        <div class="column" id="timersA">
+            <h3>Categoria A</h3>
+            <p class="category-total" id="totalA">Total: 00:00:00</p>
+        </div>
+
+        <div class="column" id="timersNA">
+            <h3>Categoria N/A</h3>
+            <p class="category-total" id="totalNA">Total: 00:00:00</p>
+        </div>
+    </div>
+
+    <!-- Popup de Confirmação para parar cronômetros -->
+    <div id="confirmation-popup" class="popup" style="display:none;">
+        <div class="popup-content">
+            <h2>Confirmar Parada</h2>
+            <p>Você deseja parar todos os cronômetros?</p>
+            <button id="confirm-stop-btn" class="btn btn-danger">Sim</button>
+            <button id="cancel-stop-btn" class="btn btn-secondary">Não</button>
+        </div>
+    </div>
+
+    <script src="/js/app1.js"></script>
+
+</body>
+</html>
