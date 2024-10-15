@@ -180,6 +180,7 @@ p {
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
+
 /* Estilo para a linha dos gráficos */
 .chart-row {
     display: flex;
@@ -206,7 +207,6 @@ canvas {
     width: 100% !important;
     height: 200px !important; /* Reduzir a altura dos gráficos */
 }
-
 
 .timer-name {
     width: 30%;
@@ -273,8 +273,14 @@ canvas {
     }
 
     .form-column {
-        width: 48%; /* Dois inputs por linha */
-        margin-bottom: 10px;
+        width: 45%; /* Dois inputs por linha */
+        margin-bottom: 5px;
+    }
+
+    .form-column input {
+        width: 100%; /* Garante que o input preencha toda a coluna */
+        padding: 5px; /* Reduz o padding para inputs menores */
+        font-size: 10px; /* Ajusta o tamanho da fonte */
     }
 
     /* Ajustar o grupo de botões */
@@ -289,7 +295,18 @@ canvas {
         padding: 10px;
     }
 
-    /* Ajustar os gráficos para mobile */
+    /* Ajustar os gráficos para ficarem na vertical */
+    .chart-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .chart-column {
+        width: 100%;
+        margin-bottom: 20px;
+        padding: 10px;
+    }
+
     .chart-container {
         max-width: 100%;
     }
@@ -303,4 +320,3 @@ canvas {
         width: 100%; /* Botão ocupa toda a largura em telas pequenas */
     }
 }
-
