@@ -1,4 +1,4 @@
-class TimerManager {
+    class TimerManager {
     constructor() {
         this.isFirstTimerStarted = false;
         this.startTime = null;
@@ -8,20 +8,28 @@ class TimerManager {
 
         document.getElementById('addTimerBtn').addEventListener('click', this.addTimer.bind(this));
         document.getElementById('startAll').addEventListener('click', this.startAllTimers.bind(this));
-        document.getElementById('stopAll').addEventListener('click', this.confirmStopAllTimers.bind(this)); // Exibir popup de confirmação
+        document.getElementById('stopAll').addEventListener('click', this.confirmStopAllTimers.bind(this));
         document.getElementById('resetAll').addEventListener('click', this.resetAllTimers.bind(this));
-        document.getElementById('closePopupBtn').addEventListener('click', this.closePopup.bind(this)); // Fechar o popup de boas-vindas
-        document.getElementById('cronoForm').addEventListener('submit', this.handleFormSubmission.bind(this)); // Submissão do formulário
+        document.getElementById('closePopupBtn').addEventListener('click', this.closePopup.bind(this));
+        document.getElementById('cronoForm').addEventListener('submit', this.handleFormSubmission.bind(this));
 
-        // Elementos do popup de confirmação
         this.confirmationPopup = document.getElementById('confirmation-popup');
-        document.getElementById('confirm-stop-btn').addEventListener('click', this.stopAllTimers.bind(this)); // Confirmar parada de todos os cronômetros
-        document.getElementById('cancel-stop-btn').addEventListener('click', this.closeConfirmationPopup.bind(this)); // Cancelar parada
+        document.getElementById('confirm-stop-btn').addEventListener('click', this.stopAllTimers.bind(this));
+        document.getElementById('cancel-stop-btn').addEventListener('click', this.closeConfirmationPopup.bind(this));
+        document.getElementById('exportBtn').addEventListener('click', this.exportToExcel.bind(this));
 
-        // Inicializar gráficos
+
         this.categoryPieChart = null;
         this.classBarChart = null;
         this.createCharts();
+
+        // Adicionando o evento de foco
+        window.addEventListener('focus', () => {
+            if (this.currentRunningTimer && this.currentRunningTimer.running) {
+                const now = Date.now();
+                this.currentRunningTimer.timeElapsed = Math.floor((now - this.currentRunningTimer.startTime) / 1000);
+            }
+        });
     }
 
     createCharts() {
@@ -79,14 +87,21 @@ class TimerManager {
 
     // Atualiza o gráfico de barras comparando a Hora do Roteiro com o tempo das classes N e A
     updateBarChart() {
-        const horaRoteiro = document.getElementById('hh').value ? parseInt(document.getElementById('hh').value) * 3600 : 0;
-        const totalN = this.calculateTotalTime('N');
-        const totalA = this.calculateTotalTime('A');
-
-        this.classBarChart.data.datasets[0].data = [horaRoteiro, totalN, totalA];
+        const horaRoteiro = document.getElementById('hh').value ? parseFloat(document.getElementById('hh').value) * 60 : 0;  // Convertendo para minutos
+        const totalN = this.calculateTotalTime('N') / 60; // Convertendo para minutos
+        const totalA = this.calculateTotalTime('A') / 60; // Convertendo para minutos
+    
+        // Somar total N + A para exibir como "Cronoanálise"
+        const totalCronoanalyse = totalN + totalA;
+    
+        // Atualiza os dados do gráfico de barras
+        this.classBarChart.data.labels = ['Hora do Roteiro', 'Cronoanálise'];  // Exibe apenas "Hora do Roteiro" e "Cronoanálise"
+        this.classBarChart.data.datasets[0].data = [horaRoteiro, totalCronoanalyse];  // Usa o total somado de N + A
+    
+        // Atualizar o gráfico
         this.classBarChart.update();
     }
-
+    
     // Função auxiliar para calcular o tempo total de uma categoria
     calculateTotalTime(category) {
         const timersInCategory = this.timers.filter(t => t.category === category);
@@ -178,9 +193,9 @@ class TimerManager {
         if (this.currentRunningTimer) {
             this.stopTimer(this.currentRunningTimer);
         }
-
+    
         const timer = this.timers.find(t => t.id === timerId);
-
+    
         if (timer && !timer.running) {
             if (!this.isFirstTimerStarted) {
                 const currentTime = new Date().toLocaleTimeString();
@@ -188,35 +203,40 @@ class TimerManager {
                 document.getElementById('header-date').textContent = `Data: ${currentDate} Hora início: ${currentTime}`;
                 this.isFirstTimerStarted = true;
                 this.startTime = new Date();
-
+    
                 this.totalTimeInterval = setInterval(this.updateTotalTime.bind(this), 1000);
             }
-
+    
+            timer.startTime = Date.now(); // Armazenar o timestamp do início
             timer.running = true;
             this.currentRunningTimer = timer;
-
+    
             const button = document.querySelector(`button[data-timer="${timer.id}"]`);
             button.textContent = "Rodando";
             button.classList.add("active");
             button.disabled = true;
-
+    
+            // Atualizar o cronômetro com base no tempo real
             timer.interval = setInterval(() => {
-                timer.timeElapsed++;
+                const now = Date.now();
+                timer.timeElapsed = Math.floor((now - timer.startTime) / 1000); // Atualizar com base no timestamp
+    
                 const hours = Math.floor(timer.timeElapsed / 3600);
                 const minutes = Math.floor((timer.timeElapsed % 3600) / 60);
                 const seconds = timer.timeElapsed % 60;
-
+    
                 document.getElementById(timer.id).textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             }, 1000);
-
+    
             this.updateCategoryTotal(category);
-
+    
             // Atualizar gráficos ao iniciar um cronômetro
             this.updatePieChart();
             this.updateBarChart();
         }
     }
-
+    
+    
     stopTimer(timer) {
         clearInterval(timer.interval);
         timer.running = false;
@@ -324,6 +344,66 @@ class TimerManager {
     startAllTimers() {
         window.location.reload();
     }
+
+    
+    exportToExcel() {
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Cronoanálise');
+    
+        // Adicionando os dados informados da cronoanálise
+        worksheet.addRow(['Dados Informados da Cronoanálise']);
+        worksheet.addRow(['Data da Cronoanálise:', document.getElementById('header-date').textContent.split('Hora início:')[0].trim()]);
+        worksheet.addRow(['Hora de Início:', document.getElementById('header-date').textContent.split('Hora início:')[1].trim()]);
+        worksheet.addRow(['Número da OP:', document.getElementById('op').value]);
+        worksheet.addRow(['PN da Peça:', document.getElementById('pn').value]);
+        worksheet.addRow(['Hora do Roteiro:', document.getElementById('hh').value]);
+        worksheet.addRow(['Número da Operação:', document.getElementById('numOperacao').value]);
+        worksheet.addRow(['Chapa do Operador:', document.getElementById('chapa').value]);
+        worksheet.addRow(['Dimensional da Peça:', document.getElementById('dimensional').value]);
+        worksheet.addRow([]); // Linha vazia para separar as seções
+    
+        // Adicionando os dados gerados da cronoanálise (somando cronômetros por categoria)
+        worksheet.addRow(['Dados Gerados da Cronoanálise']);
+        worksheet.addRow(['Categoria', 'Tempo Total Decorrido']);
+    
+        // Função auxiliar para calcular o tempo total por categoria
+        const calculateTotalTimeForCategory = (category) => {
+            const timersInCategory = this.timers.filter(timer => timer.category === category);
+            const totalSeconds = timersInCategory.reduce((total, timer) => total + timer.timeElapsed, 0);
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        };
+    
+        // Calculando e exibindo o tempo total para cada categoria
+        worksheet.addRow(['Categoria D', calculateTotalTimeForCategory('D')]);
+        worksheet.addRow(['Categoria N', calculateTotalTimeForCategory('N')]);
+        worksheet.addRow(['Categoria A', calculateTotalTimeForCategory('A')]);
+        worksheet.addRow(['Categoria N/A', calculateTotalTimeForCategory('NA')]);
+    
+        // Ajustando a largura das colunas automaticamente
+        worksheet.columns.forEach(column => {
+            let maxLength = 0;
+            column.eachCell({ includeEmpty: true }, cell => {
+                const cellLength = cell.value ? cell.value.toString().length : 10;
+                if (cellLength > maxLength) {
+                    maxLength = cellLength;
+                }
+            });
+            column.width = maxLength + 2; // Ajustar a largura com uma margem
+        });
+    
+        // Salvar o arquivo Excel
+        workbook.xlsx.writeBuffer().then((buffer) => {
+            const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'cronoanalise_somada.xlsx';
+            link.click();
+        });
+    }
+    
 }
 
 const timerManager = new TimerManager();
