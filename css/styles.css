@@ -248,10 +248,11 @@ canvas {
 
 /* Responsividade */
 @media (max-width: 768px) {
+
     /* Ajustar o layout dos cronômetros */
     .timers-container {
         flex-direction: column;
-        gap: 10px;
+        gap: 15px;
     }
 
     .column {
@@ -263,7 +264,9 @@ canvas {
 
     /* Ajustar os campos do formulário */
     .form-container {
-        padding: 10px;
+        padding: 15px;
+        font-size: 60%;
+        text-align: center;
     }
 
     .form-row {
@@ -273,14 +276,14 @@ canvas {
     }
 
     .form-column {
-        width: 45%; /* Dois inputs por linha */
+        width: 40%; /* Dois inputs por linha */
         margin-bottom: 5px;
     }
 
     .form-column input {
-        width: 100%; /* Garante que o input preencha toda a coluna */
-        padding: 5px; /* Reduz o padding para inputs menores */
-        font-size: 10px; /* Ajusta o tamanho da fonte */
+        width: 95%; /* Garante que o input preencha toda a coluna */
+        padding: 8px; /* Reduz o padding para inputs menores */
+        font-size: 12px; /* Ajusta o tamanho da fonte */
     }
 
     /* Ajustar o grupo de botões */
@@ -298,7 +301,7 @@ canvas {
     /* Ajustar os gráficos para ficarem na vertical */
     .chart-row {
         flex-direction: column;
-        gap: 15px;
+        gap: 10px;
     }
 
     .chart-column {
