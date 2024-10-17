@@ -174,48 +174,98 @@ class TimerManager {
         }
     }
 
+    // startTimer(timerId, category) {
+    //     if (this.currentRunningTimer) {
+    //         this.stopTimer(this.currentRunningTimer);
+    //     }
+
+    //     const timer = this.timers.find(t => t.id === timerId);
+
+    //     if (timer && !timer.running) {
+    //         if (!this.isFirstTimerStarted) {
+    //             const currentTime = new Date().toLocaleTimeString();
+    //             const currentDate = new Date().toLocaleDateString();
+    //             document.getElementById('header-date').textContent = `Data: ${currentDate} Hora início: ${currentTime}`;
+    //             this.isFirstTimerStarted = true;
+    //             this.startTime = new Date();
+
+    //             this.totalTimeInterval = setInterval(this.updateTotalTime.bind(this), 1000);
+    //         }
+
+    //         timer.running = true;
+    //         this.currentRunningTimer = timer;
+
+    //         const button = document.querySelector(`button[data-timer="${timer.id}"]`);
+    //         button.textContent = "Rodando";
+    //         button.classList.add("active");
+    //         button.disabled = true;
+
+    //         timer.interval = setInterval(() => {
+    //             timer.timeElapsed++;
+    //             const hours = Math.floor(timer.timeElapsed / 3600);
+    //             const minutes = Math.floor((timer.timeElapsed % 3600) / 60);
+    //             const seconds = timer.timeElapsed % 60;
+
+    //             document.getElementById(timer.id).textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    //         }, 1000);
+
+    //         this.updateCategoryTotal(category);
+
+    //         // Atualizar gráficos ao iniciar um cronômetro
+    //         this.updatePieChart();
+    //         this.updateBarChart();
+    //     }
+    // }
+
     startTimer(timerId, category) {
-        if (this.currentRunningTimer) {
-            this.stopTimer(this.currentRunningTimer);
-        }
-
-        const timer = this.timers.find(t => t.id === timerId);
-
-        if (timer && !timer.running) {
-            if (!this.isFirstTimerStarted) {
-                const currentTime = new Date().toLocaleTimeString();
-                const currentDate = new Date().toLocaleDateString();
-                document.getElementById('header-date').textContent = `Data: ${currentDate} Hora início: ${currentTime}`;
-                this.isFirstTimerStarted = true;
-                this.startTime = new Date();
-
-                this.totalTimeInterval = setInterval(this.updateTotalTime.bind(this), 1000);
-            }
-
-            timer.running = true;
-            this.currentRunningTimer = timer;
-
-            const button = document.querySelector(`button[data-timer="${timer.id}"]`);
-            button.textContent = "Rodando";
-            button.classList.add("active");
-            button.disabled = true;
-
-            timer.interval = setInterval(() => {
-                timer.timeElapsed++;
-                const hours = Math.floor(timer.timeElapsed / 3600);
-                const minutes = Math.floor((timer.timeElapsed % 3600) / 60);
-                const seconds = timer.timeElapsed % 60;
-
-                document.getElementById(timer.id).textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            }, 1000);
-
-            this.updateCategoryTotal(category);
-
-            // Atualizar gráficos ao iniciar um cronômetro
-            this.updatePieChart();
-            this.updateBarChart();
-        }
+    if (this.currentRunningTimer) {
+        this.stopTimer(this.currentRunningTimer);
     }
+
+    const timer = this.timers.find(t => t.id === timerId);
+
+    if (timer && !timer.running) {
+        if (!this.isFirstTimerStarted) {
+            const currentTime = new Date().toLocaleTimeString();
+            const currentDate = new Date().toLocaleDateString();
+            document.getElementById('header-date').textContent = Data: ${currentDate} Hora início: ${currentTime};
+            this.isFirstTimerStarted = true;
+            this.startTime = new Date();
+
+            this.totalTimeInterval = setInterval(this.updateTotalTime.bind(this), 1000);
+        }
+
+        timer.running = true;
+        this.currentRunningTimer = timer;
+
+        const button = document.querySelector(button[data-timer="${timer.id}"]);
+        button.textContent = "Rodando";
+        button.classList.add("active");
+        button.disabled = true;
+
+        // Aqui, calculamos o tempo a partir de onde o cronômetro parou, sem reiniciar do zero
+        const startTimestamp = Date.now();
+        const alreadyElapsed = timer.timeElapsed;
+
+        timer.interval = setInterval(() => {
+            // Incrementar o tempo com base no tempo decorrido desde o início deste ciclo, somado ao tempo anterior
+            const elapsedTime = Math.floor((Date.now() - startTimestamp) / 1000) + alreadyElapsed;
+            timer.timeElapsed = elapsedTime;
+
+            const hours = Math.floor(timer.timeElapsed / 3600);
+            const minutes = Math.floor((timer.timeElapsed % 3600) / 60);
+            const seconds = timer.timeElapsed % 60;
+
+            document.getElementById(timer.id).textContent = ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')};
+        }, 1000);
+
+        this.updateCategoryTotal(category);
+
+        // Atualizar gráficos ao iniciar um cronômetro
+        this.updatePieChart();
+        this.updateBarChart();
+    }
+}
 
     stopTimer(timer) {
         clearInterval(timer.interval);
